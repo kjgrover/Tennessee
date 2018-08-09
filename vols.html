@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+  <head>    
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Tennessee Volunteers Dashboard</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="http://d3js.org/d3.v2.js"></script>
+	<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style type="text/css">
+
+
+ #pieChart {    
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+} 
+
+.slice {
+   font-size: 12pt;
+   font-family: Verdana;
+   fill: white; 
+   font-weight: bold;	
+  		} 
+
+.title {
+	font-size: 12pt;
+   font-family: Verdana;
+   fill: black ; 
+   font-weight: bold;
+}
+
+#bubbleChart {   
+		display: block;
+  		margin: 0 auto;
+  		width: 100%;
+      
+ }	  
+
+/* .modal {
+  position: absolute;
+  
+  display: none;
+  z-index: 10;
+}
+.modal-box {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  display: none
+} */
+
+
+
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="navbar navbar-dark bg-dark box-shadow">
+        <div class="container d-flex justify-content-between">
+          <a  class="navbar-brand d-flex align-items-center">
+    
+            <strong class = "text-white">Kelsey J. Grover</strong>
+          </a>
+          <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader"
+             aria-controls="navbarHeader" aria-expanded="true" aria-label="Toggle navigation">
+          -->
+          <a href="/" style="text-decoration:none;"><span></span><strong class = "text-white">Home</strong> </a>
+            <!-- <span class="navbar-toggler-icon"></span> -->
+          </button>
+        </div>
+      </div>
+    </header>
+
+  <section class="jumbotron text-center">
+      <div class="container">
+        <h1 class="jumbotron-heading">Tennessee Football Dashboard</h1>
+           </p>
+      </div>
+    </section>
+    
+    <div class="container">
+    	  <div class = "row">
+
+        <div class = "col-xl-4 text-center">
+         <h2>Total Wins: 808</h2>
+        </div>
+
+        <div class = "col-xl-4 text-center">
+            <h2>Total Losses: 365</h2>
+           </div>
+
+           <div class = "col-xl-4 text-center">
+              <h2>Total Ties: 51</h2>
+             </div>
+    
+        
+     
+      </div>
+    </div>
+
+    <hr>
+ 
+	  <div class = "row">
+
+      	<div class = "col-xl-1">
+		
+		</div>
+
+		<div class = "col-xl-5 show-image text-center">
+			<div id="pieChart"></div>
+		</div>
+		<!-- <div class = "col-xl-2">
+		
+		</div> -->
+		<div class = "col-xl-5 show-image text-center">
+			<div id="bubbleChart"></div>
+    </div>
+    
+    <div class = "col-xl-1">
+		
+      </div>
+  </div>
+  
+ 
+ 
+  
+
+  <div class = "container">
+  <svg id="visualisation" width="600" height="400"></svg>
+  </div>
+
+	
+    <script type="text/javascript">
+    
+    
+/*
+################ FORMATS ##################
+-------------------------------------------
+*/
+
+
+
+var 	formatAsPercentage = d3.format("%"),
+		formatAsPercentage1Dec = d3.format(".1%"),
+		formatAsInteger = d3.format(","),
+		fsec = d3.time.format("%S s"),
+		fmin = d3.time.format("%M m"),
+		fhou = d3.time.format("%H h"),
+		fwee = d3.time.format("%a"),
+		fdat = d3.time.format("%d d"),
+		fmon = d3.time.format("%b")
+		;
+
+/*
+############# PIE CHART ###################
+-------------------------------------------
+*/
+
+
+function dsPieChart(){
+
+    
+    var dataset = [
+  {
+    "category": "Butch Jones",
+    "measure": "0.0421"
+  },
+  {
+    "category": "Derek Dooley",
+    "measure": "0.0198"
+  },
+  {
+    "category": "Lane Kiffin",
+    "measure": "0.00866"
+  },
+  {
+    "category": "Phillip Fulmer",
+    "measure": "0.182"
+  },
+  {
+    "category": "Johnny Majors",
+    "measure": "0.149"
+  },
+  {
+    "category": "Bill Battle",
+    "measure": "0.0730"
+  },
+  {
+    "category": "Doug Dickey",
+    "measure": "0.0569"
+  },
+  {
+    "category": "Jim McDonald",
+    "measure": "0.00619"
+  },
+  {
+    "category": "Bowden Wyatt",
+    "measure": "0.0606"
+  },
+  {
+    "category": "Harvey Robinson",
+    "measure": "0.0124"
+  },
+  {
+    "category": "Bob Neyland",
+    "measure": "0.214"
+  },
+  {
+    "category": "John Barnhill",
+    "measure": "0.0396"
+  },
+  {
+    "category": "W.H. Britton",
+    "measure": "0.00495"
+  },
+  {
+    "category": "Mark Banks",
+    "measure": "0.0334"
+  },
+  {
+    "category": "John Bender",
+    "measure": "0.0223"
+  },
+  {
+    "category": "Zora Clevenger",
+    "measure": "0.0322"
+  },
+  {
+    "category": "Alex Stone",
+    "measure": "0.00371"
+  },
+  {
+    "category": "George Levene",
+    "measure": "0.0186"
+  },
+  {
+    "category": "J.D. DePree",
+    "measure": "0.00495"
+  },
+  {
+    "category": "S.D. Crawford",
+    "measure": "0.00371"
+  },
+  {
+    "category": "H.E. Fisher",
+    "measure": "0.0124"
+  }
+];
+
+
+	var 	width = 600,
+		   height = 600,
+		   outerRadius = Math.min(width, height) / 2,
+		   innerRadius = outerRadius * .999,   
+		   // for animation
+		   innerRadiusFinal = outerRadius * .5,
+		   innerRadiusFinal3 = outerRadius* .45,
+		   color = d3.scale.category20()    //builtin range of colors
+		   ;
+	    
+	var vis = d3.select("#pieChart")
+	     .append("svg:svg")              //create the SVG element inside the <body>
+	     .data([dataset])                   //associate our data with the document
+	         .attr("width", width)           //set the width and height of our visualization (these will be attributes of the <svg> tag
+	         .attr("height", height)
+	     		.append("svg:g")                //make a group to hold our pie chart
+	         .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+				;
+				
+   var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
+			.outerRadius(outerRadius).innerRadius(innerRadius);
+			
+			
+   
+   // for animation
+  var arcFinal = d3.svg.arc().innerRadius(innerRadiusFinal).outerRadius(outerRadius);
+	var arcFinal3 = d3.svg.arc().innerRadius(innerRadiusFinal3).outerRadius(outerRadius);
+
+   var pie = d3.layout.pie()           //this will create arc data for us given a list of values
+        .value(function(d) { return d.measure; });    //we must tell it out to access the value of each element in our data array
+
+   var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
+        .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties) 
+        .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
+        .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
+        .attr("class", "slice")    //allow us to style things in the slices (like text)
+            //    .on("mouseover", mouseover)
+    				// .on("mouseout", mouseout)
+    				// .on("click", up)
+    				;
+    				
+        arcs.append("svg:path")
+               .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
+               .attr("d", arc)     //this creates the actual SVG path using the associated data (pie) with the arc drawing function
+					.append("svg:title") //mouseover title showing the figures
+				   .text(function(d) { return d.data.category + ": " + formatAsPercentage1Dec(d.data.measure); });			
+
+        d3.selectAll("g.slice").selectAll("path").transition()
+			    .duration(750)
+			    .delay(10)
+			    .attr("d", arcFinal )
+			    ;
+	
+	  // Add a label to the larger arcs, translated to the arc centroid and rotated.
+	  // source: http://bl.ocks.org/1305337#index.html
+	  arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
+	  		.append("svg:text")
+	      .attr("dy", ".25em")
+	      .attr("text-anchor", "middle")
+	      .attr("transform", function(d) { return "translate(" + arcFinal.centroid(d) + ")rotate(" + angle(d) + ")"; })
+	      //.text(function(d) { return formatAsPercentage(d.value); })
+	      .text(function(d) { return d.data.category; })
+	      ;
+	   
+	   // Computes the label angle of an arc, converting from radians to degrees.
+		function angle(d) {
+		    var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+		    return a > 90 ? a - 180 : a;
+		}
+		    
+		
+		// Pie chart title			
+		vis.append("svg:text")
+	     	.attr("dy", ".35em")
+	      .attr("text-anchor", "middle")
+	      .text("Wins by Coach")
+	      .attr("class","title")
+	      ;		    
+
+
+		
+	// function mouseover() {
+	//   d3.select(this).select("path").transition()
+	//       .duration(750)
+	//         		//.attr("stroke","red")
+	//         		//.attr("stroke-width", 1.5)
+	//         		.attr("d", arcFinal3)
+	//         		;
+	// }
+	
+	// function mouseout() {
+	//   d3.select(this).select("path").transition()
+	//       .duration(750)
+	//         		//.attr("stroke","blue")
+	//         		//.attr("stroke-width", 1.5)
+	//         		.attr("d", arcFinal)
+	//         		;
+	// }
+	
+	// function up() {
+  
+  // $("#modal01").empty();
+  // $("#modal01").append("d");
+  // $("#modal01").show();
+  // $("#box").show();
+
+  //   /* update bar chart when user selects piece of the pie chart */
+	// 			//updateBarChart(dataset[i].category);
+	// 			// updateBarChart(d.data.category, color(i));
+	// 			// updateLineChart(d.data.category, color(i));
+			 
+	// }
+}
+
+dsPieChart();
+
+
+
+
+        datasetTwo = {
+            "children": [
+  {
+    "Name": "Butch Jones",
+    "Count": "6.8"
+  },
+  {
+    "Name": "Derek Dooley",
+    "Count": "5.3"
+  },
+  {
+    "Name": "Lane Kiffin",
+    "Count": "7.0"
+  },
+  {
+    "Name": "Phillip Fulmer",
+    "Count": "9.2"
+  },
+  {
+    "Name": "Johnny Majors",
+    "Count": "7.5"
+  },
+  {
+    "Name": "Bill Battle",
+    "Count": "8.4"
+  },
+  {
+    "Name": "Doug Dickey",
+    "Count": "7.7"
+  },
+  {
+    "Name": "Jim McDonald",
+    "Count": "5.0"
+  },
+  {
+    "Name": "Bowden Wyatt",
+    "Count": "6.1"
+  },
+  {
+    "Name": "Harvey Robinson",
+    "Count": "5.0"
+  },
+  {
+    "Name": "Bob Neyland",
+    "Count": "8.2"
+  },
+  {
+    "Name": "John Barnhill",
+    "Count": "8.0"
+  },
+  {
+    "Name": "W.H. Britton",
+    "Count": "4.0"
+  },
+  {
+    "Name": "Mark Banks",
+    "Count": "5.4"
+  },
+  {
+    "Name": "John Bender",
+    "Count": "6.0"
+  },
+  {
+    "Name": "Zora Clevenger",
+    "Count": "5.2"
+  },
+  {
+    "Name": "Alex Stone",
+    "Count": "3.0"
+  },
+  {
+    "Name": "George Levene",
+    "Count": "5.0"
+  },
+  {
+    "Name": "J.D. DePree",
+    "Count": "2.0"
+  },
+  {
+    "Name": "S.D. Crawford",
+    "Count": "3.0"
+  },
+  {
+    "Name": "H.E. Fisher",
+    "Count": "5.0"
+  }
+]
+        };
+
+        var diameter = 600;
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+        var bubble = d3.pack(datasetTwo)
+            .size([diameter, diameter])
+            .padding(1.5)
+
+        var svg = d3.select("#bubbleChart")
+            .append("svg")
+            .attr("width", diameter)
+            .attr("height", diameter)
+            .attr("class", "bubble");
+            
+
+        var nodes = d3.hierarchy(datasetTwo)
+            .sum(function(d) { return d.Count; });
+
+        var node = svg.selectAll(".node")
+            .data(bubble(nodes).descendants())
+            .enter()
+            .filter(function(d){
+                return  !d.children
+            })
+            .append("g")
+            .attr("class", "node")
+            .attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+
+        node.append("title")
+            .text(function(d) {
+                return d.data.Name + ": " + d.data.Count;
+            });
+
+        node.append("circle")
+            .attr("r", function(d) {
+                return d.r;
+            })
+            .style("fill", function(d,i) {
+                return color(i);
+            });
+
+        node.append("text")
+            .attr("dy", ".2em")
+            .style("text-anchor", "middle")
+            .text(function(d) {
+                return d.data.Name.substring(0, d.r / 2);
+            })
+            .attr("font-family", "sans-serif")
+            .attr("font-size", function(d){
+                return d.r/5;
+            })
+            .attr("fill", "white");
+
+        node.append("text")
+            .attr("dy", "1.3em")
+            .style("text-anchor", "middle")
+            .text(function(d) {
+                return d.data.Count;
+            })
+            .attr("font-family",  "Gill Sans", "Gill Sans MT")
+            .attr("font-size", function(d){
+                return d.r/2;
+            })
+            .attr("fill", "white");
+
+        d3.select(self.frameElement)
+            .style("height", diameter + "px");
+
+            	// Pie chart title			
+		svg.append("svg:text")
+	     	.attr("dy", ".9em")
+        .attr("text-anchor", "start")
+        .attr("x", 80)//padding of 4px
+        .attr("y", 20)
+	      .text("Average Number of Wins Per Season by Coach")
+	      .attr("class","title")
+	      ;		   
+
+
+    </script>
+  </body>
+</html>
