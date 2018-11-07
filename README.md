@@ -4,4 +4,4 @@ This is a dashboard of tennessee football stats made with data from https://www.
 
 ## Made With
 
-JavaScript, Node.js, Express, and D3.js
+JavaScript, Node.js, Express, SQL, and D3.js
